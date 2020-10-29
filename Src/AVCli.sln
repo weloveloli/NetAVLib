@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "avcli", "avcli.csproj", "{BF80363C-743E-4E24-875F-23B7FCE6BC4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AVCli", "AVCli\AVCli.csproj", "{BF80363C-743E-4E24-875F-23B7FCE6BC4D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AVLib", "AVLib\AVLib.csproj", "{9EE54C78-569D-4CB8-A649-9D57AD5DB7D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,18 @@ Global
 		{BF80363C-743E-4E24-875F-23B7FCE6BC4D}.Release|x64.Build.0 = Release|Any CPU
 		{BF80363C-743E-4E24-875F-23B7FCE6BC4D}.Release|x86.ActiveCfg = Release|Any CPU
 		{BF80363C-743E-4E24-875F-23B7FCE6BC4D}.Release|x86.Build.0 = Release|Any CPU
+		{9EE54C78-569D-4CB8-A649-9D57AD5DB7D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EE54C78-569D-4CB8-A649-9D57AD5DB7D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EE54C78-569D-4CB8-A649-9D57AD5DB7D7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9EE54C78-569D-4CB8-A649-9D57AD5DB7D7}.Debug|x64.Build.0 = Debug|Any CPU
+		{9EE54C78-569D-4CB8-A649-9D57AD5DB7D7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9EE54C78-569D-4CB8-A649-9D57AD5DB7D7}.Debug|x86.Build.0 = Debug|Any CPU
+		{9EE54C78-569D-4CB8-A649-9D57AD5DB7D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EE54C78-569D-4CB8-A649-9D57AD5DB7D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EE54C78-569D-4CB8-A649-9D57AD5DB7D7}.Release|x64.ActiveCfg = Release|Any CPU
+		{9EE54C78-569D-4CB8-A649-9D57AD5DB7D7}.Release|x64.Build.0 = Release|Any CPU
+		{9EE54C78-569D-4CB8-A649-9D57AD5DB7D7}.Release|x86.ActiveCfg = Release|Any CPU
+		{9EE54C78-569D-4CB8-A649-9D57AD5DB7D7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

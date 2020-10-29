@@ -1,14 +1,23 @@
-﻿
-using System;
-using System.CommandLine;
-using System.CommandLine.Invocation;
-using System.IO;
+﻿// Program.cs 2020
 
 namespace avcli
 {
-    class Program
+    using System;
+    using System.CommandLine;
+    using System.CommandLine.Invocation;
+    using System.IO;
+
+    /// <summary>
+    /// Defines the <see cref="Program" />.
+    /// </summary>
+    internal class Program
     {
-        static int Main(string[] args)
+        /// <summary>
+        /// The Main.
+        /// </summary>
+        /// <param name="args">The args<see cref="string[]"/>.</param>
+        /// <returns>The <see cref="int"/>.</returns>
+        internal static int Main(string[] args)
         {
             // Create a root command with some options
             var rootCommand = new RootCommand
