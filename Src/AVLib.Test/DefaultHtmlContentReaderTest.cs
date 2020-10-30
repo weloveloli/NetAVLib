@@ -3,6 +3,7 @@
 namespace AVLib.Test
 {
     using AVCli.AVLib;
+    using AVCli.AVLib.Services;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
     using Moq.Protected;
@@ -65,14 +66,31 @@ namespace AVLib.Test
 
             this.proxySelector = new Mock<IProxySelector>();
             this.proxySelector.Setup(x => x.GetAll()).Returns(new List<string>());
+            this.proxySelector.Setup(x => x.GetProxyName(It.IsAny<string>())).Returns(Configuration.NoProxy);
         }
 
         /// <summary>
         /// The TestLoadFromUrlAsync.
         /// </summary>
         [TestMethod]
-        public void TestLoadFromUrlAsync()
+        public async Task TestLoadFromUrlAsync()
         {
+            var configuration = new Configuration();
+            var defaultHtmlContentReader = new DefaultHtmlContentReader(this.httpFactory.Object, this.cacheProvider.Object, this.proxySelector.Object, configuration);
+            var content = await defaultHtmlContentReader.LoadFromUrlAsync("http://www.baidu.com");
+            Assert.AreEqual("success", content);
+
+        }
+
+        [TestMethod]
+        public async Task TestLoadFromUrlAsyncWithCache()
+        {
+            var configuration = new Configuration();
+            var cacheProvider = new Mock<ICacheProvider>();
+            cacheProvider.Setup(x => x.GetContentFromCacheAsync(It.IsAny<string>())).ReturnsAsync("fromCache");
+            var defaultHtmlContentReader = new DefaultHtmlContentReader(this.httpFactory.Object, cacheProvider.Object, this.proxySelector.Object, configuration);
+            var content = await defaultHtmlContentReader.LoadFromUrlAsync("http://www.baidu.com");
+            Assert.AreEqual("fromCache", content);
         }
     }
 }

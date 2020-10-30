@@ -9,7 +9,7 @@
     /// <summary>
     /// Defines the <see cref="LiteDBCacheProvider" />.
     /// </summary>
-    internal class LiteDBCacheProvider : ICacheProvider, IDisposable
+    public class LiteDBCacheProvider : ICacheProvider, IDisposable
     {
         /// <summary>
         /// Defines the conf.

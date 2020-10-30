@@ -8,7 +8,7 @@ namespace AVCli.AVLib.Services
     /// <summary>
     /// Defines the <see cref="DefaultHtmlContentReader" />.
     /// </summary>
-    internal class DefaultHtmlContentReader : IHtmlContentReader
+    public class DefaultHtmlContentReader : IHtmlContentReader
     {
         /// <summary>
         /// Defines the cacheProvider.

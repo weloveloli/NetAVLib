@@ -26,20 +26,28 @@ namespace AVCli.AVLib
         public const string NoProxy = "default";
 
         /// <summary>
+        /// Defines the userAgent.
+        /// </summary>
+        private string userAgent;
+
+        /// <summary>
         /// Gets or sets the UserAgent.
         /// </summary>
         public string UserAgent
         {
-            get { return string.IsNullOrEmpty(UserAgent) ? UserAgentMap["Chrome"] : UserAgent; }
+            get
+            {
+                return string.IsNullOrEmpty(userAgent) ? UserAgentMap["Chrome"] : userAgent;
+            }
             set
             {
                 if (UserAgentMap.ContainsKey(value))
                 {
-                    UserAgent = UserAgentMap[value];
+                    userAgent = UserAgentMap[value];
                 }
                 else
                 {
-                    UserAgent = value;
+                    userAgent = value;
                 }
             }
         }
