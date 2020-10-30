@@ -19,7 +19,7 @@ namespace AVCli.AVLib.Services
 
         private int _increasement;
 
-        private List<string> proxies;
+        private readonly List<string> proxies;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RoundRobinProxySelector"/> class.
