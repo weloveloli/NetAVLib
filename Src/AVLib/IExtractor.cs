@@ -1,20 +1,19 @@
 ﻿// IExtractor.cs 2020
 
-namespace AVCli.AVLib.Interfaces
+namespace AVCli.AVLib
 {
-    using AVCli.AVLib.Models;
     using System.Threading.Tasks;
 
     /// <summary>
     /// Defines the <see cref="IExtractor" />.
     /// </summary>
-    interface IExtractor
+    public interface IExtractor
     {
         /// <summary>
         /// The GetDataAsync.
         /// </summary>
         /// <param name="number">The number<see cref="string"/>.</param>
         /// <returns>The <see cref="Task{AvData}"/>.</returns>
-        Task<AvData> GetDataAsync(string number);
+        public Task<AvData> GetDataAsync(string number);
     }
 }

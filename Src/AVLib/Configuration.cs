@@ -1,13 +1,14 @@
-﻿// AVLibConf.cs 2020
+﻿// Configuration.cs 2020
 
-namespace AVCli.AVLib.Configuration
+namespace AVCli.AVLib
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
-    /// Defines the <see cref="AVLibConf" />.
+    /// Defines the <see cref="Configuration" />.
     /// </summary>
-    public class AVLibConf
+    public class Configuration
     {
         /// <summary>
         /// Defines the UserAgentMap.
@@ -51,7 +52,7 @@ namespace AVCli.AVLib.Configuration
         /// <summary>
         /// Gets a value indicating whether UseProxy.
         /// </summary>
-        public bool UseProxy => this.ProxyList == null || this.ProxyList.Count == 0;
+        public bool UseProxy => this.ProxyList == null && this.ProxyList.Any();
 
         /// <summary>
         /// Gets or sets the BasePath.

@@ -2,8 +2,6 @@
 
 namespace AVCli.AVLib.Services
 {
-    using AVCli.AVLib.Configuration;
-    using AVCli.AVLib.Interfaces;
     using System.Net.Http;
     using System.Threading.Tasks;
 
@@ -25,7 +23,7 @@ namespace AVCli.AVLib.Services
         /// <summary>
         /// Defines the aVLibConf.
         /// </summary>
-        private readonly AVLibConf aVLibConf;
+        private readonly Configuration conf;
 
         /// <summary>
         /// Defines the clientFactory.
@@ -38,12 +36,12 @@ namespace AVCli.AVLib.Services
         /// <param name="clientFactory">The clientFactory<see cref="IHttpClientFactory"/>.</param>
         /// <param name="cacheProvider">The cacheProvider<see cref="ICacheProvider"/>.</param>
         /// <param name="proxySelector">The proxySelector<see cref="IProxySelector"/>.</param>
-        /// <param name="aVLibConf">The aVLibConf<see cref="AVLibConf"/>.</param>
-        public DefaultHtmlContentReader(IHttpClientFactory clientFactory, ICacheProvider cacheProvider, IProxySelector proxySelector, AVLibConf aVLibConf)
+        /// <param name="conf">The aVLibConf<see cref="Configuration"/>.</param>
+        public DefaultHtmlContentReader(IHttpClientFactory clientFactory, ICacheProvider cacheProvider, IProxySelector proxySelector, Configuration conf)
         {
             this.cacheProvider = cacheProvider;
             this.proxySelector = proxySelector;
-            this.aVLibConf = aVLibConf;
+            this.conf = conf;
             this.clientFactory = clientFactory;
         }
 
@@ -54,14 +52,14 @@ namespace AVCli.AVLib.Services
         /// <returns>The <see cref="Task{string}"/>.</returns>
         public async Task<string> LoadFromUrlAsync(string url)
         {
-            var contentFromCache = cacheProvider.GetContentFromCache(url);
+            var contentFromCache = await cacheProvider.GetContentFromCacheAsync(url);
             if (!string.IsNullOrEmpty(contentFromCache))
             {
                 return contentFromCache;
             }
             var proxyName = proxySelector.GetProxyName(url);
             var httpClient = clientFactory.CreateClient(proxyName);
-            httpClient.DefaultRequestHeaders.Add("UserAgent", aVLibConf.UserAgent);
+            httpClient.DefaultRequestHeaders.Add("UserAgent", conf.UserAgent);
             HttpResponseMessage message = await httpClient.GetAsync(url);
             message.EnsureSuccessStatusCode();
             var responseBody = await message.Content.ReadAsStringAsync();

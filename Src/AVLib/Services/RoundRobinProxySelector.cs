@@ -2,8 +2,7 @@
 
 namespace AVCli.AVLib.Services
 {
-    using AVCli.AVLib.Configuration;
-    using AVCli.AVLib.Interfaces;
+    using AVCli.AVLib;
     using System.Collections.Generic;
     using System.Threading;
 
@@ -15,7 +14,7 @@ namespace AVCli.AVLib.Services
         /// <summary>
         /// Defines the conf.
         /// </summary>
-        private readonly AVLibConf conf;
+        private readonly Configuration conf;
 
         private int _increasement;
 
@@ -25,7 +24,7 @@ namespace AVCli.AVLib.Services
         /// Initializes a new instance of the <see cref="RoundRobinProxySelector"/> class.
         /// </summary>
         /// <param name="conf">The conf<see cref="AVLibConf"/>.</param>
-        public RoundRobinProxySelector(AVLibConf conf)
+        public RoundRobinProxySelector(Configuration conf)
         {
             this.conf = conf;
             this._increasement = 0;
@@ -63,7 +62,7 @@ namespace AVCli.AVLib.Services
             }
             else
             {
-                return AVLibConf.NoProxy;
+                return Configuration.NoProxy;
             }
         }
     }
