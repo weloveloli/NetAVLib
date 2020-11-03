@@ -15,5 +15,11 @@ namespace AVCli.AVLib
         /// <param name="number">The number<see cref="string"/>.</param>
         /// <returns>The <see cref="Task{AvData}"/>.</returns>
         public Task<AvData> GetDataAsync(string number);
+
+        /// <summary>
+        /// The getKey.
+        /// </summary>
+        /// <returns>The <see cref="string"/>.</returns>
+        public string GetKey();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace AVCli.AVLib
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -19,6 +20,15 @@ namespace AVCli.AVLib
              { "Firefox","Mozilla/5.0 (Windows NT 6.1; WOW64; rv:6.0) Gecko/20100101 Firefox/6.0"},
             { "Safari","Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/534.50 (KHTML, like Gecko) Version/5.1 Safari/534.50"}
         };
+
+        /// <summary>
+        /// Defines the UserAgentMap.
+        /// </summary>
+        private static readonly Dictionary<string, string> DefaultBaseUrlMap = new Dictionary<string, string>
+        {
+            { "JAVDB","https://javdb4.com"}
+        };
+
 
         /// <summary>
         /// Defines the NoProxy.
@@ -78,5 +88,8 @@ namespace AVCli.AVLib
             }
             set { this.basePath = value; }
         }
+
+
+        public string GetBaseUrl(string key) => Environment.GetEnvironmentVariable("BASE_URL_" + key) ?? DefaultBaseUrlMap[key];
     }
 }
