@@ -34,6 +34,10 @@
         /// <returns>The <see cref="Task{string}"/>.</returns>
         public Task<string> GetContentFromCacheAsync(string key)
         {
+            if (key == null)
+            {
+                return Task.FromResult<string>(null); ;
+            }
             return Task.Run(() => this.dict[key]);
         }
 
@@ -44,6 +48,10 @@
         /// <returns>The <see cref="Task{AvData}"/>.</returns>
         public Task<AvData> GetDataAsync(string number)
         {
+            if(number == null)
+            {
+                return Task.FromResult<AvData>(null);
+            }
             return Task.Run(() => this.dictObj[number]);
         }
 
@@ -54,6 +62,10 @@
         /// <returns>The <see cref="Task{bool}"/>.</returns>
         public Task<bool> StoreDataAsync(AvData data)
         {
+            if (data == null)
+            {
+                return Task.FromResult(false);
+            }
             return Task.Run(() =>
             {
                 this.dictObj[data.Number] = data;
@@ -69,6 +81,10 @@
         /// <returns>The <see cref="Task{bool}"/>.</returns>
         public Task<bool> WriteCacheAsync(string key, string content)
         {
+            if (content == null || key == null)
+            {
+                return Task.FromResult(false);
+            }
             return Task.Run(() =>
             {
                 this.dict[key] = content;

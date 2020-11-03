@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks Condition="'$(LibraryFrameworks)'==''">netstandard2.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(LibraryFrameworks)'!=''">$(LibraryFrameworks)</TargetFrameworks>
     <RootNamespace>AVCli.AVLib</RootNamespace>
     <AssemblyName>AVCli.AVLib</AssemblyName>
     <LangVersion>8.0</LangVersion>
