@@ -21,7 +21,7 @@ namespace AVCli.AVLib.Services
         private readonly IProxySelector proxySelector;
 
         /// <summary>
-        /// Defines the aVLibConf.
+        /// Defines the conf.
         /// </summary>
         private readonly Configuration conf;
 
@@ -60,7 +60,7 @@ namespace AVCli.AVLib.Services
             var proxyName = proxySelector.GetProxyName(url);
             var httpClient = clientFactory.CreateClient(proxyName);
             httpClient.DefaultRequestHeaders.Add("UserAgent", conf.UserAgent);
-            HttpResponseMessage message = await httpClient.GetAsync(url);
+            var message = await httpClient.GetAsync(url);
             message.EnsureSuccessStatusCode();
             var responseBody = await message.Content.ReadAsStringAsync();
             return responseBody;

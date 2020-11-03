@@ -1,9 +1,8 @@
 ﻿// ICacheProvider.cs 2020
 
-using System.Threading.Tasks;
-
 namespace AVCli.AVLib
 {
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Defines the <see cref="ICacheProvider" />.
@@ -35,9 +34,8 @@ namespace AVCli.AVLib
         /// <summary>
         /// The StoreData.
         /// </summary>
-        /// <param name="number">The number<see cref="string"/>.</param>
         /// <param name="data">The data<see cref="AvData"/>.</param>
         /// <returns>The <see cref="bool"/>.</returns>
-        public Task<bool> StoreDataAsync(string number, AvData data);
+        public Task<bool> StoreDataAsync(AvData data);
     }
 }

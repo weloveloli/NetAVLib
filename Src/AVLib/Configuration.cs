@@ -60,7 +60,12 @@ namespace AVCli.AVLib
         /// <summary>
         /// Gets a value indicating whether UseProxy.
         /// </summary>
-        public bool UseProxy => this.ProxyList == null && this.ProxyList.Any();
+        public bool UseProxy => this.ProxyList != null && this.ProxyList.Any();
+
+        /// <summary>
+        /// Defines the basePath.
+        /// </summary>
+        private string basePath;
 
         /// <summary>
         /// Gets or sets the BasePath.
@@ -69,9 +74,9 @@ namespace AVCli.AVLib
         {
             get
             {
-                return BasePath ?? System.IO.Directory.GetCurrentDirectory();
+                return this.basePath ?? System.IO.Directory.GetCurrentDirectory();
             }
-            set { BasePath = value; }
+            set { this.basePath = value; }
         }
     }
 }

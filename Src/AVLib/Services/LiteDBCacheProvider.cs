@@ -12,13 +12,24 @@
     public class LiteDBCacheProvider : ICacheProvider, IDisposable
     {
         /// <summary>
-        /// Defines the conf.
+        /// Defines the db.
         /// </summary>
         private readonly LiteDatabase db;
-        private bool disposedValue;
-        private readonly ILiteStorage<string> fs;
-        private readonly ILiteCollection<AvData> avCol;
 
+        /// <summary>
+        /// Defines the disposedValue.
+        /// </summary>
+        private bool disposedValue;
+
+        /// <summary>
+        /// Defines the fs.
+        /// </summary>
+        private readonly ILiteStorage<string> fs;
+
+        /// <summary>
+        /// Defines the avCol.
+        /// </summary>
+        private readonly ILiteCollection<AvData> avCol;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LiteDBCacheProvider"/> class.
@@ -40,10 +51,18 @@
         /// <returns>The <see cref="string"/>.</returns>
         public Task<string> GetContentFromCacheAsync(string key)
         {
-            if (string.IsNullOrEmpty(key)) return null;
+            if (string.IsNullOrEmpty(key))
+            {
+                return null;
+            }
+
             var id = key.SHA256();
             var liteFileInfo = this.fs.FindById(id);
-            if (liteFileInfo == null) return null;
+            if (liteFileInfo == null)
+            {
+                return null;
+            }
+
             using var stream = new MemoryStream();
             liteFileInfo.CopyTo(stream);
             stream.Position = 0;
@@ -59,17 +78,25 @@
         /// <returns>The <see cref="bool"/>.</returns>
         public async Task<bool> WriteCacheAsync(string key, string content)
         {
-            if (string.IsNullOrEmpty(key)||string.IsNullOrEmpty(content))
+            if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(content))
             {
                 return false;
             }
-            using var stream = new MemoryStream();
-            using var writer = new StreamWriter(stream);
-            await writer.WriteAsync(content);
-            this.fs.Upload(key.SHA256(), key, stream);
+            using (var stream = new MemoryStream())
+            {
+                using var writer = new StreamWriter(stream);
+                await writer.WriteAsync(content);
+                await writer.FlushAsync();
+                stream.Position = 0;
+                this.fs.Upload(key.SHA256(), key, stream);
+            }
             return true;
         }
 
+        /// <summary>
+        /// The Dispose.
+        /// </summary>
+        /// <param name="disposing">The disposing<see cref="bool"/>.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -88,7 +115,9 @@
         //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         //     Dispose(disposing: false);
         // }
-
+        /// <summary>
+        /// The Dispose.
+        /// </summary>
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
@@ -96,16 +125,26 @@
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// The GetDataAsync.
+        /// </summary>
+        /// <param name="number">The number<see cref="string"/>.</param>
+        /// <returns>The <see cref="Task{AvData}"/>.</returns>
         public async Task<AvData> GetDataAsync(string number)
         {
-            return await Task.Run(()=>this.avCol.FindOne(x => x.Number == number));
+            return await Task.Run(() => this.avCol.FindOne(x => x.Number == number));
         }
 
-        public async Task<bool> StoreDataAsync(string number, AvData data)
+        /// <summary>
+        /// The StoreDataAsync.
+        /// </summary>
+        /// <param name="data">The data<see cref="AvData"/>.</param>
+        /// <returns>The <see cref="Task{bool}"/>.</returns>
+        public async Task<bool> StoreDataAsync(AvData data)
         {
             return await Task.Run(() =>
             {
-                if (string.IsNullOrEmpty(number) || data == null)
+                if (data == null)
                 {
                     return false;
                 }

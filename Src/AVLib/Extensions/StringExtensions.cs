@@ -16,7 +16,11 @@ namespace AVCli.AVLib.Extensions
         /// <returns>The <see cref="string"/>.</returns>
         public static string SHA256(this string data)
         {
-            if (data == null) return null;
+            if (data == null)
+            {
+                return null;
+            }
+
             byte[] bytes = Encoding.UTF8.GetBytes(data);
             byte[] hash = System.Security.Cryptography.SHA256.Create().ComputeHash(bytes);
 

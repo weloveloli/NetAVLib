@@ -20,6 +20,6 @@ namespace AVCli.AVLib
         /// Get All of the proxy.
         /// </summary>
         /// <returns>The <see cref="List{string}"/>.</returns>
-        public List<string> GetAll();
+        public Dictionary<string,string> GetAll();
     }
 }

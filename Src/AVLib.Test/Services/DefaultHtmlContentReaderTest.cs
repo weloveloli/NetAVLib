@@ -59,13 +59,13 @@ namespace AVLib.Test
 
             this.httpFactory = httpClientFactoryMock;
             this.cacheProvider = new Mock<ICacheProvider>();
-            this.cacheProvider.Setup(x => x.StoreDataAsync(It.IsAny<string>(), It.IsAny<AvData>())).ReturnsAsync(true);
+            this.cacheProvider.Setup(x => x.StoreDataAsync(It.IsAny<AvData>())).ReturnsAsync(true);
             this.cacheProvider.Setup(x => x.WriteCacheAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
             this.cacheProvider.Setup(x => x.GetContentFromCacheAsync(It.IsAny<string>())).ReturnsAsync(string.Empty);
             this.cacheProvider.Setup(x => x.GetDataAsync(It.IsAny<string>())).ReturnsAsync((AvData)null);
 
             this.proxySelector = new Mock<IProxySelector>();
-            this.proxySelector.Setup(x => x.GetAll()).Returns(new List<string>());
+            this.proxySelector.Setup(x => x.GetAll()).Returns(new Dictionary<string, string>());
             this.proxySelector.Setup(x => x.GetProxyName(It.IsAny<string>())).Returns(Configuration.NoProxy);
         }
 
