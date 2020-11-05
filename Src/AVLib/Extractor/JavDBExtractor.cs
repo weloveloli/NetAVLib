@@ -60,13 +60,17 @@ namespace AVCli.AVLib.Extractor
         /// <returns>The <see cref="Task{AvData}"/>.</returns>
         public async Task<AvData> GetDataAsync(string number)
         {
-            var data = await this.GetDataAsync(number);
+            var data = await this.cacheProvider.GetDataAsync(number);
             if (data != null)
             {
                 return data;
             }
-            data = await this.getRootAsync(number);
-            await this.cacheProvider.StoreDataAsync(data);
+            data = await this.GetByHtmlAsync(number);
+            if (data != null)
+            {
+                await this.cacheProvider.StoreDataAsync(data);
+            }
+
             return data;
         }
 
@@ -84,14 +88,40 @@ namespace AVCli.AVLib.Extractor
         /// </summary>
         /// <param name="number">The number<see cref="string"/>.</param>
         /// <returns>The <see cref="Task{AvData}"/>.</returns>
-        public async Task<AvData> getRootAsync(string number)
+        public async Task<AvData> GetByHtmlAsync(string number)
         {
-            var detailUrl = await getDetailPageUrl(number);
-            if (detailUrl == null)
+            var metaData = await GetDetailPageContent(number);
+            if (metaData == null || string.IsNullOrEmpty(metaData.WebSiteUrl))
             {
                 return null;
             }
-            return null;
+
+            var detailContent = await this.htmlContentReader.LoadFromUrlAsync(metaData.WebSiteUrl);
+            if (detailContent== null)
+            {
+                return null;
+            }
+            var document = await context.OpenAsync(req => req.Content(detailContent));
+
+            return ResolveContent(document, metaData);
+        }
+
+        /// <summary>
+        /// The ResolveContent.
+        /// </summary>
+        /// <param name="document">The document<see cref="IDocument"/>.</param>
+        /// <param name="data">The data<see cref="AvData"/>.</param>
+        /// <returns>The <see cref="AvData"/>.</returns>
+        private AvData ResolveContent(IDocument document, AvMetaData metaData)
+        {
+            AvData data = new AvData
+            {
+                Title = metaData.Title,
+                Number = metaData.Number,
+                WebSiteUrl = metaData.WebSiteUrl,
+                ThumbUrl = metaData.ThumbUrl,
+            };
+            return data;
         }
 
         /// <summary>
@@ -99,7 +129,7 @@ namespace AVCli.AVLib.Extractor
         /// </summary>
         /// <param name="number">The number<see cref="string"/>.</param>
         /// <returns>The <see cref="Task{string}"/>.</returns>
-        public async Task<string> getDetailPageUrl(string number)
+        private async Task<AvMetaData> GetDetailPageContent(string number)
         {
             var htmlContent = await this.htmlContentReader.LoadFromUrlAsync($"{this.baseUrl}/search?q={number}&f=all");
             if (string.IsNullOrEmpty(htmlContent))
@@ -108,14 +138,14 @@ namespace AVCli.AVLib.Extractor
             }
 
             var document = await context.OpenAsync(req => req.Content(htmlContent));
-
             var elements = document.QuerySelectorAll("#videos div div a");
-            var ele = elements.Select(GetVideoInfo).FirstOrDefault(e => e.number.Equals(number, StringComparison.OrdinalIgnoreCase));
-            if (string.IsNullOrEmpty(ele.href))
+            var ele = elements.Select(GetVideoInfo).FirstOrDefault(e => e.Number.Equals(number, StringComparison.OrdinalIgnoreCase));
+            if (ele==null)
             {
                 return null;
             }
-            return $"{ this.baseUrl}{ele.href}";
+
+            return ele;
         }
 
         /// <summary>
@@ -123,12 +153,19 @@ namespace AVCli.AVLib.Extractor
         /// </summary>
         /// <param name="element">The element<see cref="IElement"/>.</param>
         /// <returns>The <see cref="(string href, string number,string title)"/>.</returns>
-        internal static (string href, string number, string title) GetVideoInfo(IElement element)
+        private AvMetaData GetVideoInfo(IElement element)
         {
             var href = element.GetAttribute("href");
             var number = element.QuerySelector(".uid").Text();
             var title = element.QuerySelector(".video-title").Text();
-            return (href, number, title);
+            var thumbUrl = element.QuerySelector("img").Attributes["src"].Value;
+            return new AvMetaData
+            {
+                Number = number,
+                Title = title,
+                WebSiteUrl = $"{ this.baseUrl}{href}?locale=zh",
+                ThumbUrl = thumbUrl
+            };
         }
     }
 }

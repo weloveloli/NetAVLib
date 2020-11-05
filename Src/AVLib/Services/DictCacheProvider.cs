@@ -38,7 +38,7 @@
             {
                 return Task.FromResult<string>(null); ;
             }
-            return Task.Run(() => this.dict[key]);
+            return Task.Run(() => this.dict.ContainsKey(key) ? this.dict[key] : null);
         }
 
         /// <summary>
@@ -52,7 +52,7 @@
             {
                 return Task.FromResult<AvData>(null);
             }
-            return Task.Run(() => this.dictObj[number]);
+            return Task.Run(() => this.dictObj.ContainsKey(number)?this.dictObj[number]:null);
         }
 
         /// <summary>

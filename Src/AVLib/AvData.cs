@@ -7,22 +7,12 @@ namespace AVCli.AVLib
     /// <summary>
     /// Defines the <see cref="AvData" />.
     /// </summary>
-    public class AvData
+    public class AvData : AvMetaData
     {
-        /// <summary>
-        /// Gets or sets the Title.
-        /// </summary>
-        public string Title { get; set; }
-
         /// <summary>
         /// Gets or sets the Year.
         /// </summary>
         public string Year { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Number.
-        /// </summary>
-        public string Number { get; set; }
 
         /// <summary>
         /// Gets or sets the Source.
@@ -89,10 +79,6 @@ namespace AVCli.AVLib
         /// </summary>
         public List<string> Magnets { get; set; }
 
-        /// <summary>
-        /// Gets or sets the WebSiteUrl.
-        /// </summary>
-        public string WebSiteUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the PreviewVideo.
