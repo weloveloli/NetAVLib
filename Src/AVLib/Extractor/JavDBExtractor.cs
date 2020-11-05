@@ -1,10 +1,11 @@
-﻿namespace AVCli.AVLib.Extractor
+﻿// JavDBExtractor.cs 2020
+
+namespace AVCli.AVLib.Extractor
 {
     using AngleSharp;
     using AngleSharp.Dom;
     using System;
     using System.Linq;
-    using System.Runtime.InteropServices;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -22,7 +23,14 @@
         /// </summary>
         private readonly AVLib.Configuration conf;
 
+        /// <summary>
+        /// Defines the baseUrl.
+        /// </summary>
         private readonly string baseUrl;
+
+        /// <summary>
+        /// Defines the context.
+        /// </summary>
         private readonly IBrowsingContext context;
 
         /// <summary>
@@ -62,17 +70,35 @@
             return data;
         }
 
+        /// <summary>
+        /// The GetKey.
+        /// </summary>
+        /// <returns>The <see cref="string"/>.</returns>
         public string GetKey()
         {
             return "JAVDB";
         }
 
+        /// <summary>
+        /// The getRootAsync.
+        /// </summary>
+        /// <param name="number">The number<see cref="string"/>.</param>
+        /// <returns>The <see cref="Task{AvData}"/>.</returns>
         public async Task<AvData> getRootAsync(string number)
         {
             var detailUrl = await getDetailPageUrl(number);
+            if (detailUrl == null)
+            {
+                return null;
+            }
             return null;
         }
 
+        /// <summary>
+        /// The getDetailPageUrl.
+        /// </summary>
+        /// <param name="number">The number<see cref="string"/>.</param>
+        /// <returns>The <see cref="Task{string}"/>.</returns>
         public async Task<string> getDetailPageUrl(string number)
         {
             var htmlContent = await this.htmlContentReader.LoadFromUrlAsync($"{this.baseUrl}/search?q={number}&f=all");
@@ -84,9 +110,25 @@
             var document = await context.OpenAsync(req => req.Content(htmlContent));
 
             var elements = document.QuerySelectorAll("#videos div div a");
+            var ele = elements.Select(GetVideoInfo).FirstOrDefault(e => e.number.Equals(number, StringComparison.OrdinalIgnoreCase));
+            if (string.IsNullOrEmpty(ele.href))
+            {
+                return null;
+            }
+            return $"{ this.baseUrl}{ele.href}";
+        }
 
-
-            return null;
+        /// <summary>
+        /// The GetVideoInfo.
+        /// </summary>
+        /// <param name="element">The element<see cref="IElement"/>.</param>
+        /// <returns>The <see cref="(string href, string number,string title)"/>.</returns>
+        internal static (string href, string number, string title) GetVideoInfo(IElement element)
+        {
+            var href = element.GetAttribute("href");
+            var number = element.QuerySelector(".uid").Text();
+            var title = element.QuerySelector(".video-title").Text();
+            return (href, number, title);
         }
     }
 }
