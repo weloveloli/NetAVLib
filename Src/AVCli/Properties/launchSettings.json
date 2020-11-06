@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AVCli": {
+      "commandName": "Project",
+      "commandLineArgs": "--number MUM-120"
+    }
+  }
+}

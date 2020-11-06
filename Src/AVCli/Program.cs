@@ -1,51 +1,81 @@
 ﻿// Program.cs 2020
 
-namespace avcli
+namespace AVCli
 {
-    using System;
     using System.CommandLine;
+    using System.CommandLine.Builder;
+    using System.CommandLine.Hosting;
     using System.CommandLine.Invocation;
-    using System.IO;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
+    using System.CommandLine.Parsing;
+    using System.Threading.Tasks;
+    using Microsoft.Extensions.DependencyInjection;
+    using AVCli.AVLib;
+    using AVCli.AVLib.Extractor;
+    using AVCli.AVLib.Services;
+    using System.Collections.Generic;
+    using System.Net.Http;
+    using System.Net;
+    using System.Linq;
 
-    /// <summary>
-    /// Defines the <see cref="Program" />.
-    /// </summary>
-    internal class Program
+    class Program
     {
-        /// <summary>
-        /// The Main.
-        /// </summary>
-        /// <param name="args">The args<see cref="string[]"/>.</param>
-        /// <returns>The <see cref="int"/>.</returns>
-        internal static int Main(string[] args)
+        static async Task Main(string[] args) => await BuildCommandLine()
+            .UseHost(_ => Host.CreateDefaultBuilder(),
+                host =>
+                {
+                    Configuration configuration = new Configuration();
+                    host.ConfigureServices(services =>
+                    {
+                        services.AddSingleton(configuration);
+                        services.AddSingleton<IExtractor,JavDBExtractor>();
+                        services.AddSingleton<ICacheProvider,LiteDBCacheProvider>();
+                        var proxySelector = new RoundRobinProxySelector(configuration);
+                        services.AddSingleton<IProxySelector>(proxySelector);
+                        if (!configuration.UseProxy)
+                        {
+                            services.AddHttpClient(Configuration.NoProxy);
+                        }
+                        else
+                        {
+                            var all = proxySelector.GetAll();
+                            foreach(var p in all)
+                            {
+                                services.AddHttpClient(p.Key).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler()
+                                {
+                                    Proxy = new WebProxy(p.Value)
+                                });
+                            }
+                        }
+                        services.AddSingleton<IHtmlContentReader, DefaultHtmlContentReader>();
+                    });
+                })
+            .UseDefaults()
+            .Build()
+            .InvokeAsync(args);
+
+        private static CommandLineBuilder BuildCommandLine()
         {
-            // Create a root command with some options
-            var rootCommand = new RootCommand
-    {
-        new Option<int>(
-            "--int-option",
-            getDefaultValue: () => 42,
-            description: "An option whose argument is parsed as an int"),
-        new Option<bool>(
-            "--bool-option",
-            "An option whose argument is parsed as a bool"),
-        new Option<FileInfo>(
-            "--file-option",
-            "An option whose argument is parsed as a FileInfo")
-    };
+            var root = new RootCommand(@"$ dotnet run --number 'MUM_120'"){
+                new Option<string>("--number"){
+                    IsRequired = true
+                }
+            };
+            root.Handler = CommandHandler.Create<NumberOptions, IHost>(Run);
+            return new CommandLineBuilder(root);
+        }
 
-            rootCommand.Description = "My sample app";
+        private static async Task Run(NumberOptions options, IHost host)
+        {
+            var serviceProvider = host.Services;
+            var extractor = serviceProvider.GetService<IExtractor>();
+            var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+            var logger = loggerFactory.CreateLogger(typeof(Program));
 
-            // Note that the parameters of the handler method are matched according to the names of the options
-            rootCommand.Handler = CommandHandler.Create<int, bool, FileInfo>((intOption, boolOption, fileOption) =>
-             {
-                 Console.WriteLine($"The value for --int-option is: {intOption}");
-                 Console.WriteLine($"The value for --bool-option is: {boolOption}");
-                 Console.WriteLine($"The value for --file-option is: {fileOption?.FullName ?? "null"}");
-             });
-
-            // Parse the incoming args and invoke the handler
-            return rootCommand.InvokeAsync(args).Result;
+            var data = await extractor.GetDataAsync(options.Number);
+            logger.LogInformation(data.Number);
+            
         }
     }
 }

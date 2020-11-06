@@ -33,7 +33,7 @@ namespace AVCli.AVLib.Services
             {
                 ProxyList = new List<string>
             {
-                "sock5://172.168.12.10:80",
+                "https://0.0.0.0:8080",
                 "https://0.0.0.0:9000"
             }
             };

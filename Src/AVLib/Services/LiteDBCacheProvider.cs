@@ -49,7 +49,7 @@
         /// </summary>
         /// <param name="key">The key<see cref="string"/>.</param>
         /// <returns>The <see cref="string"/>.</returns>
-        public Task<string> GetContentFromCacheAsync(string key)
+        public async Task<string> GetContentFromCacheAsync(string key)
         {
             if (string.IsNullOrEmpty(key))
             {
@@ -67,7 +67,7 @@
             liteFileInfo.CopyTo(stream);
             stream.Position = 0;
             StreamReader streamReader = new StreamReader(stream);
-            return streamReader.ReadToEndAsync();
+            return await streamReader.ReadToEndAsync();
         }
 
         /// <summary>

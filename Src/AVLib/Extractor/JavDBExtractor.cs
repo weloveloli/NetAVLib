@@ -97,7 +97,7 @@ namespace AVCli.AVLib.Extractor
             }
 
             var detailContent = await this.htmlContentReader.LoadFromUrlAsync(metaData.WebSiteUrl);
-            if (detailContent== null)
+            if (detailContent == null)
             {
                 return null;
             }
@@ -110,17 +110,44 @@ namespace AVCli.AVLib.Extractor
         /// The ResolveContent.
         /// </summary>
         /// <param name="document">The document<see cref="IDocument"/>.</param>
-        /// <param name="data">The data<see cref="AvData"/>.</param>
+        /// <param name="metaData">The metaData<see cref="AvMetaData"/>.</param>
         /// <returns>The <see cref="AvData"/>.</returns>
         private AvData ResolveContent(IDocument document, AvMetaData metaData)
         {
+            var time = document.QuerySelector("body > section > div > div.movie-info-panel > div > div:nth-child(2) > nav > div:nth-child(2) > span")?.Text();
+            var outline = document.QuerySelector("body > section > div > h2 > strong")?.Text();
+            var duration = document.QuerySelector("body > section > div > div.movie-info-panel > div > div:nth-child(2) > nav > div:nth-child(3) > span")?.Text();
+            var director = document.QuerySelector("body > section > div > div.movie-info-panel > div > div:nth-child(2) > nav > div:nth-child(4) > span")?.Text();
+            var studio = document.QuerySelector("body > section > div > div.movie-info-panel > div > div:nth-child(2) > nav > div:nth-child(5) > span")?.Text();
+            var release = document.QuerySelector("body > section > div > div.movie-info-panel > div > div:nth-child(2) > nav > div:nth-child(6) > span")?.Text();
+            var category = document.QuerySelector("body > section > div > div.movie-info-panel > div > div:nth-child(2) > nav > div:nth-child(7) > span")?.Text();
+            var actor = document.QuerySelector("body > section > div > div.movie-info-panel > div > div:nth-child(2) > nav > div:nth-child(3) > span")?.Text();
+            var coverUrl = document.QuerySelector("body > section > div > div.movie-info-panel > div > div.column.column-video-cover > a > img") ?.GetAttribute("src");
+            var previewUrl = document.QuerySelector("#preview-video > source").GetAttribute("src");
+            var images = document.QuerySelectorAll(".tile-item").Select(e => e.GetAttribute("href")).ToList();
+            var magnets = document.QuerySelectorAll(".magnet-name > a").Select(e => e.GetAttribute("href")).ToList();
             AvData data = new AvData
             {
                 Title = metaData.Title,
                 Number = metaData.Number,
                 WebSiteUrl = metaData.WebSiteUrl,
                 ThumbUrl = metaData.ThumbUrl,
+                Time = time?.Trim(),
+                Year = time?.Substring(0,4),
+                Release = release,
+                Studio = studio,
+                MainCover = coverUrl,
+                Actors = actor.Split(",".ToCharArray()).ToList(),
+                Directors = director.Split(",".ToCharArray()).ToList(),
+                PreviewVideo = previewUrl,
+                Labels = category.Split(",".ToCharArray()).ToList(),
+                Magnets = magnets,
+                Source = this.GetKey(),
+                Outline = outline
+
+
             };
+
             return data;
         }
 
@@ -140,7 +167,7 @@ namespace AVCli.AVLib.Extractor
             var document = await context.OpenAsync(req => req.Content(htmlContent));
             var elements = document.QuerySelectorAll("#videos div div a");
             var ele = elements.Select(GetVideoInfo).FirstOrDefault(e => e.Number.Equals(number, StringComparison.OrdinalIgnoreCase));
-            if (ele==null)
+            if (ele == null)
             {
                 return null;
             }
