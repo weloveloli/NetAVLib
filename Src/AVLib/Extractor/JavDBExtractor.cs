@@ -121,7 +121,7 @@ namespace AVCli.AVLib.Extractor
             var studio = document.QuerySelector("body > section > div > div.movie-info-panel > div > div:nth-child(2) > nav > div:nth-child(5) > span")?.Text();
             var release = document.QuerySelector("body > section > div > div.movie-info-panel > div > div:nth-child(2) > nav > div:nth-child(6) > span")?.Text();
             var category = document.QuerySelector("body > section > div > div.movie-info-panel > div > div:nth-child(2) > nav > div:nth-child(7) > span")?.Text();
-            var actor = document.QuerySelector("body > section > div > div.movie-info-panel > div > div:nth-child(2) > nav > div:nth-child(3) > span")?.Text();
+            var actor = document.QuerySelector("body > section > div > div.movie-info-panel > div > div:nth-child(2) > nav > div:nth-child(8) > span")?.Text();
             var coverUrl = document.QuerySelector("body > section > div > div.movie-info-panel > div > div.column.column-video-cover > a > img") ?.GetAttribute("src");
             var previewUrl = document.QuerySelector("#preview-video > source").GetAttribute("src");
             var images = document.QuerySelectorAll(".tile-item").Select(e => e.GetAttribute("href")).ToList();
@@ -140,7 +140,7 @@ namespace AVCli.AVLib.Extractor
                 Actors = actor.Split(",".ToCharArray()).ToList(),
                 Directors = director.Split(",".ToCharArray()).ToList(),
                 PreviewVideo = previewUrl,
-                Labels = category.Split(",".ToCharArray()).ToList(),
+                Tags = category.Split(",".ToCharArray()).ToList(),
                 Magnets = magnets,
                 Source = this.GetKey(),
                 Outline = outline

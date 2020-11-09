@@ -3,6 +3,7 @@
 namespace AVCli
 {
     using AVCli.AVLib;
+    using AVCli.AVLib.Extensions;
     using AVCli.AVLib.Extractor;
     using AVCli.AVLib.Services;
     using Microsoft.Extensions.Configuration;
@@ -119,13 +120,11 @@ namespace AVCli
             {
                 Items = new List<AvData> { data }
             };
-            table.AddColumn(data => $"{data.Title}", "Title");
+            table.AddColumn(data => $"{data.Title.Shorten(8)}", "Title");
             table.AddColumn(data => $"{data.Number}", "Number");
             table.AddColumn(data => $"{data.Time}", "Time");
-            table.AddColumn(data => $"{data.Release}", "Release");
-            table.AddColumn(data => $"{data.Tags?.Aggregate("", (x, y) => x + " " + y)}", "Tags");
-            table.AddColumn(data => $"{data.Actors?.Aggregate("", (x, y) => x + " " + y)}", "Actors");
-            table.AddColumn(data => $"{data.Directors?.Aggregate("", (x, y) => x + " " + y)}", "Tags");
+            table.AddColumn(data => $"{data.Actors?.Join(",")}", "Actors");
+            table.AddColumn(data => $"{data.Tags?.Join(",")}", "Tags");
             //table.AddColumn(process => ContentView.FromObservable(process.TrackCpuUsage(), x => $"{x.UsageTotal:P}"), "CPU", ColumnDefinition.Star(1));
 
             var screen = new ScreenView(renderer: consoleRenderer, console) { Child = table };

@@ -2,6 +2,7 @@
 
 namespace AVCli.AVLib.Extensions
 {
+    using System;
     using System.Text;
 
     /// <summary>
@@ -30,6 +31,32 @@ namespace AVCli.AVLib.Extensions
                 builder.Append(hash[i].ToString("x2"));
             }
             return builder.ToString();
+        }
+
+        /// <summary>
+        /// The Shorten.
+        /// </summary>
+        /// <param name="data">The data<see cref="string"/>.</param>
+        /// <param name="length">The length<see cref="int"/>.</param>
+        /// <returns>The <see cref="string"/>.</returns>
+        public static string Shorten(this string data, int length)
+        {
+            if (data == null)
+            {
+                return null;
+            }
+            if (length < 0)
+            {
+                throw new ArgumentException("length should be large than 0");
+            }
+            if (data.Length <= length)
+            {
+                return data;
+            }
+            else
+            {
+                return data.Substring(0, length - 3) + "...";
+            }
         }
     }
 }

@@ -50,11 +50,6 @@ namespace AVCli.AVLib
         public List<string> Actors { get; set; }
 
         /// <summary>
-        /// Gets or sets the Labels.
-        /// </summary>
-        public List<string> Labels { get; set; }
-
-        /// <summary>
         /// Gets or sets the Tags.
         /// </summary>
         public List<string> Tags { get; set; }
