@@ -46,16 +46,7 @@ steps:
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)/avcli'
     publishWebProjects: false
 
-- task: ArchiveFiles@2
-  displayName: 'zip file'
-  inputs:
-    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/avcli'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/avcli-$(Build.BuildId).zip'
-    replaceExistingArchive: true
-
 - task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)/avcli-$(Build.BuildId).zip' 
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)/avcli' 
     artifactName: 'AvCli-Win'
