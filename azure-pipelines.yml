@@ -36,14 +36,17 @@ steps:
     command: 'test'
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+  displayName: 'dotnet Test'
 
 - task: DotNetCoreCLI@2
+  displayName: 'dotnet publish'
   inputs:
     command: publish
     projects: '**/AVCli/*.csproj'
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)/avcli'
 
 - task: ArchiveFiles@2
+  displayName: 'zip file'
   inputs:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/avcli'
     includeRootFolder: true
