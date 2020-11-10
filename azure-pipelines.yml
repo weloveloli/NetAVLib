@@ -16,14 +16,6 @@ variables:
 
 steps:
 - task: NuGetToolInstaller@1
-
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'restore'
-    projects: '**/*.csproj'
-    feedsToUse: 'config'
-    nugetConfigPath: 'Src/nuget.config'
-
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
@@ -38,15 +30,3 @@ steps:
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
   displayName: 'dotnet Test'
 
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet publish'
-  inputs:
-    command: publish
-    projects: '**/AVCli/*.csproj'
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)/avcli'
-    publishWebProjects: false
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)/avcli' 
-    artifactName: 'AvCli-Win'
