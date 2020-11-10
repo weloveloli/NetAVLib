@@ -44,6 +44,7 @@ steps:
     command: publish
     projects: '**/AVCli/*.csproj'
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)/avcli'
+    publishWebProjects: false
 
 - task: ArchiveFiles@2
   displayName: 'zip file'
