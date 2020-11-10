@@ -4,8 +4,11 @@ namespace AVCli.AVLib.Extractor
 {
     using AngleSharp;
     using AngleSharp.Dom;
+    using AngleSharp.Html.Dom.Events;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -66,12 +69,19 @@ namespace AVCli.AVLib.Extractor
                 return data;
             }
             data = await this.GetByHtmlAsync(number);
-            if (data != null)
-            {
-                await this.cacheProvider.StoreDataAsync(data);
-            }
-
             return data;
+        }
+
+        /// <summary>
+        /// The GetDataAsync.
+        /// </summary>
+        /// <param name="keyword">The number<see cref="string"/>.</param>
+        /// <returns>The <see cref="Task{List{AvData}}"/>.</returns>
+        public async Task<List<AvData>> SearchDataAsync(string keyword)
+        {
+            var metaDatas = await GetMetaDataByKeyWords(keyword);
+            var datas = await Task.WhenAll(metaDatas.Select(ResolveFromMetaData));
+            return datas.Where((x) => x != null).ToList();
         }
 
         /// <summary>
@@ -90,7 +100,22 @@ namespace AVCli.AVLib.Extractor
         /// <returns>The <see cref="Task{AvData}"/>.</returns>
         public async Task<AvData> GetByHtmlAsync(string number)
         {
-            var metaData = await GetDetailPageContent(number);
+            var metaDatas = await GetMetaDataByKeyWords(number);
+            var metaData = metaDatas.FirstOrDefault(e => e.Number.Equals(number, StringComparison.OrdinalIgnoreCase));
+            return await ResolveFromMetaData(metaData);
+        }
+
+        public async Task<AvData> ResolveFromMetaData(AvMetaData metaData)
+        {
+            if(metaData == null)
+            {
+                return null;
+            }
+            var data  = await cacheProvider.GetDataAsync(metaData.Number);
+            if (data != null)
+            {
+                return data;
+            }
             if (metaData == null || string.IsNullOrEmpty(metaData.WebSiteUrl))
             {
                 return null;
@@ -103,8 +128,13 @@ namespace AVCli.AVLib.Extractor
             }
             var document = await context.OpenAsync(req => req.Content(detailContent));
 
-            return ResolveContent(document, metaData);
-        }
+            data =  ResolveContent(document, metaData);
+            if (data != null)
+            {
+                await cacheProvider.StoreDataAsync(data);
+            }
+            return data;
+        } 
 
         /// <summary>
         /// The ResolveContent.
@@ -123,7 +153,7 @@ namespace AVCli.AVLib.Extractor
             var category = document.QuerySelector("body > section > div > div.movie-info-panel > div > div:nth-child(2) > nav > div:nth-child(7) > span")?.Text();
             var actor = document.QuerySelector("body > section > div > div.movie-info-panel > div > div:nth-child(2) > nav > div:nth-child(8) > span")?.Text();
             var coverUrl = document.QuerySelector("body > section > div > div.movie-info-panel > div > div.column.column-video-cover > a > img") ?.GetAttribute("src");
-            var previewUrl = document.QuerySelector("#preview-video > source").GetAttribute("src");
+            var previewUrl = document.QuerySelector("#preview-video > source")?.GetAttribute("src");
             var images = document.QuerySelectorAll(".tile-item").Select(e => e.GetAttribute("href")).ToList();
             var magnets = document.QuerySelectorAll(".magnet-name > a").Select(e => e.GetAttribute("href")).ToList();
             AvData data = new AvData
@@ -156,9 +186,9 @@ namespace AVCli.AVLib.Extractor
         /// </summary>
         /// <param name="number">The number<see cref="string"/>.</param>
         /// <returns>The <see cref="Task{string}"/>.</returns>
-        private async Task<AvMetaData> GetDetailPageContent(string number)
+        private async Task<List<AvMetaData>> GetMetaDataByKeyWords(string keyword)
         {
-            var htmlContent = await this.htmlContentReader.LoadFromUrlAsync($"{this.baseUrl}/search?q={number}&f=all");
+            var htmlContent = await this.htmlContentReader.LoadFromUrlAsync($"{this.baseUrl}/search?q={keyword}&f=all");
             if (string.IsNullOrEmpty(htmlContent))
             {
                 return null;
@@ -166,13 +196,8 @@ namespace AVCli.AVLib.Extractor
 
             var document = await context.OpenAsync(req => req.Content(htmlContent));
             var elements = document.QuerySelectorAll("#videos div div a");
-            var ele = elements.Select(GetVideoInfo).FirstOrDefault(e => e.Number.Equals(number, StringComparison.OrdinalIgnoreCase));
-            if (ele == null)
-            {
-                return null;
-            }
-
-            return ele;
+            var eles = elements.Select(GetVideoInfo).ToList();
+            return eles;
         }
 
         /// <summary>
@@ -183,9 +208,13 @@ namespace AVCli.AVLib.Extractor
         private AvMetaData GetVideoInfo(IElement element)
         {
             var href = element.GetAttribute("href");
-            var number = element.QuerySelector(".uid").Text();
-            var title = element.QuerySelector(".video-title").Text();
-            var thumbUrl = element.QuerySelector("img").Attributes["src"].Value;
+            var number = element.QuerySelector(".uid")?.Text();
+            var title = element.QuerySelector(".video-title")?.Text();
+            var thumbUrl = element.QuerySelector("img")?.Attributes["data-src"]?.Value;
+            if(string.IsNullOrEmpty(href) || string.IsNullOrEmpty(number))
+            {
+                return null;
+            }
             return new AvMetaData
             {
                 Number = number,

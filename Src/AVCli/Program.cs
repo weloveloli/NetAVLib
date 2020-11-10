@@ -34,7 +34,7 @@ namespace AVCli
         /// <summary>
         /// The Main.
         /// </summary>
-        /// <param name="args">The args<see cref="string[]"/>.</param>
+        /// <param name="args">The args.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         internal static async Task Main(string[] args) => await BuildCommandLine()
             .UseHost(_ => Host.CreateDefaultBuilder(),
@@ -85,7 +85,8 @@ namespace AVCli
             var root = new RootCommand(@"$ dotnet run 'MUM_120'") { };
             root.AddArgument(new Argument<string>("number", "number of av"));
             root.AddOption(new Option<bool>(new string[] { "--table", "-t" }, () => false, "set table view"));
-            root.Handler = CommandHandler.Create<string, List<string>, bool, IHost>(Run);
+            root.AddOption(new Option<bool>(new string[] { "--search", "-s" }, () => false, "enable search"));
+            root.Handler = CommandHandler.Create<string, List<string>, bool,bool, IHost>(Run);
             return new CommandLineBuilder(root);
         }
 
@@ -93,11 +94,12 @@ namespace AVCli
         /// The Run.
         /// </summary>
         /// <param name="number">The number<see cref="string"/>.</param>
-        /// <param name="proxies">The proxies<see cref="List{string}"/>.</param>
+        /// <param name="proxies">The proxies<see cref="List{String}"/>.</param>
         /// <param name="table">The table<see cref="bool"/>.</param>
+        /// <param name="search">the search<see cref="bool"/></param>
         /// <param name="host">The host<see cref="IHost"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        private static async Task Run(string number, List<string> proxies, bool table, IHost host)
+        private static async Task Run(string number, List<string> proxies, bool table, bool search, IHost host)
         {
 
             var serviceProvider = host.Services;
@@ -105,10 +107,19 @@ namespace AVCli
             var extractor = serviceProvider.GetService<IExtractor>();
             var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
             var logger = loggerFactory.CreateLogger(typeof(Program));
+            List<AvData> list;
+            if (!search)
+            {
+                var data = await extractor.GetDataAsync(number);
+                list = new List<AvData> { data };
+                logger.LogDebug(data.Number);
+            }
+            else
+            {
+                list = await extractor.SearchDataAsync(number);
+            }
 
-            var data = await extractor.GetDataAsync(number);
-            logger.LogDebug(data.Number);
-            RenderData(new List<AvData> { data }, table, serviceProvider);
+            RenderData(list, table, serviceProvider);
         }
 
         /// <summary>
@@ -191,6 +202,7 @@ namespace AVCli
                    NameValue.Of("Tags",e.Tags),
  
                };
+                values.AddRange(NameValue.AsList("Covers", e.Covers));
                 values.AddRange(NameValue.AsList("Magnets", e.Magnets));
          
                 ConsoleTable.From(values).Configure(o =>
@@ -219,10 +231,10 @@ namespace AVCli
             }
             public static List<NameValue> AsList(string name, List<string> value)
             {
-                return value.Select((e, i) =>
+                return value?.Select((e, i) =>
                 {
                     return new NameValue { Name = name + i, Value = e };
-                }).ToList();
+                }).ToList()??new List<NameValue>();
             }
         }
     }

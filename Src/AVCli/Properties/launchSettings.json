@@ -2,7 +2,7 @@
   "profiles": {
     "AVCli": {
       "commandName": "Project",
-      "commandLineArgs": "MUM-121"
+      "commandLineArgs": "-s MUM-12"
     }
   }
 }
