@@ -6,6 +6,7 @@ namespace AVCli
     using AVCli.AVLib.Extensions;
     using AVCli.AVLib.Extractor;
     using AVCli.AVLib.Services;
+    using ConsoleTables;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
@@ -23,7 +24,6 @@ namespace AVCli
     using System.Linq;
     using System.Net;
     using System.Net.Http;
-    using System.Text;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -84,7 +84,8 @@ namespace AVCli
         {
             var root = new RootCommand(@"$ dotnet run 'MUM_120'") { };
             root.AddArgument(new Argument<string>("number", "number of av"));
-            root.Handler = CommandHandler.Create<string, List<string>, IHost>(Run);
+            root.AddOption(new Option<bool>(new string[] { "--table", "-t" }, () => false, "set table view"));
+            root.Handler = CommandHandler.Create<string, List<string>, bool, IHost>(Run);
             return new CommandLineBuilder(root);
         }
 
@@ -93,12 +94,50 @@ namespace AVCli
         /// </summary>
         /// <param name="number">The number<see cref="string"/>.</param>
         /// <param name="proxies">The proxies<see cref="List{string}"/>.</param>
+        /// <param name="table">The table<see cref="bool"/>.</param>
         /// <param name="host">The host<see cref="IHost"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        private static async Task Run(string number, List<string> proxies, IHost host)
+        private static async Task Run(string number, List<string> proxies, bool table, IHost host)
         {
-            var region = new Region(0, 0, Console.WindowWidth, Console.WindowHeight, false);
+
             var serviceProvider = host.Services;
+
+            var extractor = serviceProvider.GetService<IExtractor>();
+            var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+            var logger = loggerFactory.CreateLogger(typeof(Program));
+
+            var data = await extractor.GetDataAsync(number);
+            logger.LogDebug(data.Number);
+            RenderData(new List<AvData> { data }, table, serviceProvider);
+        }
+
+        /// <summary>
+        /// The RenderData.
+        /// </summary>
+        /// <param name="avDatas">The avDatas<see cref="List{AvData}"/>.</param>
+        /// <param name="table">The table<see cref="bool"/>.</param>
+        /// <param name="serviceProvider">The serviceProvider<see cref="IServiceProvider"/>.</param>
+        public static void RenderData(List<AvData> avDatas, bool table, IServiceProvider serviceProvider)
+        {
+            if (table)
+            {
+                RenderTableData(avDatas, serviceProvider);
+            }
+            else
+            {
+                RenderConsoleData(avDatas, serviceProvider);
+            }
+        }
+
+        /// <summary>
+        /// The RenderTableData.
+        /// </summary>
+        /// <param name="avDatas">The avDatas<see cref="List{AvData}"/>.</param>
+        /// <param name="serviceProvider">The serviceProvider<see cref="IServiceProvider"/>.</param>
+        public static void RenderTableData(List<AvData> avDatas, IServiceProvider serviceProvider)
+        {
+
+            var region = new Region(0, 0, Console.WindowWidth, Console.WindowHeight, false);
             var context = serviceProvider.GetService<InvocationContext>();
             var console = context.Console;
             if (console is ITerminal terminal)
@@ -110,25 +149,81 @@ namespace AVCli
                 console,
                 mode: context.BindingContext.OutputMode(),
                 resetAfterRender: true);
-            var extractor = serviceProvider.GetService<IExtractor>();
-            var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
-            var logger = loggerFactory.CreateLogger(typeof(Program));
-
-            var data = await extractor.GetDataAsync(number);
-            logger.LogDebug(data.Number);
-            var table = new TableView<AvData>
+            var tableView = new TableView<AvData>
             {
-                Items = new List<AvData> { data }
+                Items = avDatas
             };
-            table.AddColumn(data => $"{data.Title.Shorten(8)}", "Title");
-            table.AddColumn(data => $"{data.Number}", "Number");
-            table.AddColumn(data => $"{data.Time}", "Time");
-            table.AddColumn(data => $"{data.Actors?.Join(",")}", "Actors");
-            table.AddColumn(data => $"{data.Tags?.Join(",")}", "Tags");
+            tableView.AddColumn(data => $"{data.Title.Shorten(8)}", "Title");
+            tableView.AddColumn(data => $"{data.Number}", "Number");
+            tableView.AddColumn(data => $"{data.Time}", "Time");
+            tableView.AddColumn(data => $"{data.Actors?.Join(",")}", "Actors");
+            tableView.AddColumn(data => $"{data.Tags?.Join(",")}", "Tags");
             //table.AddColumn(process => ContentView.FromObservable(process.TrackCpuUsage(), x => $"{x.UsageTotal:P}"), "CPU", ColumnDefinition.Star(1));
 
-            var screen = new ScreenView(renderer: consoleRenderer, console) { Child = table };
+            var screen = new ScreenView(renderer: consoleRenderer, console) { Child = tableView };
             screen.Render(region);
+        }
+
+        /// <summary>
+        /// The RenderConsoleData.
+        /// </summary>
+        /// <param name="avDatas">The avDatas<see cref="List{AvData}"/>.</param>
+        /// <param name="serviceProvider">The serviceProvider<see cref="IServiceProvider"/>.</param>
+        public static void RenderConsoleData(List<AvData> avDatas, IServiceProvider serviceProvider)
+        {
+            avDatas.ForEach(e =>
+            {
+                var values = new List<NameValue>
+               {
+                   NameValue.Of("Number",e.Number),
+                   NameValue.Of("Title",e.Title),
+                   NameValue.Of("Year",e.Year),
+                   NameValue.Of("Time",e.Time),
+                   NameValue.Of("MainCover",e.MainCover),
+                   NameValue.Of("ThumbUrl",e.ThumbUrl),
+                   NameValue.Of("WebSiteUrl",e.WebSiteUrl),
+                   NameValue.Of("PreviewVideo",e.PreviewVideo),
+                   NameValue.Of("Outline",e.Outline),
+                   NameValue.Of("Source",e.Source),
+                   NameValue.Of("Studio",e.Studio),
+                   NameValue.Of("Actors",e.Actors),
+                   NameValue.Of("Director",e.Directors),
+                   NameValue.Of("Tags",e.Tags),
+ 
+               };
+                values.AddRange(NameValue.AsList("Magnets", e.Magnets));
+         
+                ConsoleTable.From(values).Configure(o =>
+                {
+                    o.NumberAlignment = Alignment.Right;
+                    o.EnableCount = false;       
+                }
+                ).Write();
+                Console.WriteLine();
+            });
+        }
+
+        internal class NameValue
+        {
+            public string Name  { get; private set; }
+            public string Value  { get; private set; }
+
+            public static NameValue Of(string name,string value)
+            {
+                return new NameValue { Name = name, Value = value };
+            }
+
+            public static NameValue Of(string name, List<string> value)
+            {
+                return new NameValue { Name = name, Value = value?.Join(",") };
+            }
+            public static List<NameValue> AsList(string name, List<string> value)
+            {
+                return value.Select((e, i) =>
+                {
+                    return new NameValue { Name = name + i, Value = e };
+                }).ToList();
+            }
         }
     }
 }
