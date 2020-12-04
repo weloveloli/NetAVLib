@@ -1,9 +1,14 @@
-﻿namespace AVCli.AVLib
+﻿// -----------------------------------------------------------------------
+// <copyright file="LiteDbCahceProviderTest.cs" company="Weloveloli">
+//     Copyright (c) Weloveloli.  All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+namespace Weloveloli.AVLib
 {
-    using AVCli.AVLib.Services;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System.IO;
     using System.Threading.Tasks;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Weloveloli.AVLib.Services;
 
     /// <summary>
     /// Defines the <see cref="DictCacheProviderTest" />.
@@ -11,8 +16,14 @@
     [TestClass]
     public class DictCacheProviderTest
     {
+        /// <summary>
+        /// Defines the provider.
+        /// </summary>
         private DictCacheProvider provider;
 
+        /// <summary>
+        /// The Init.
+        /// </summary>
         [TestInitialize]
         public void Init()
         {
@@ -22,12 +33,14 @@
         /// <summary>
         /// The MyTestMethod.
         /// </summary>
+        /// <returns>The <see cref="Task"/>.</returns>
         [TestMethod]
         public async Task TestCache()
         {
             bool store = await this.provider.StoreDataAsync(new AvData()
             {
-                Title="AV-Test",Number = "AV-Test"
+                Title = "AV-Test",
+                Number = "AV-Test"
             });
             Assert.IsTrue(store);
             AvData data = await provider.GetDataAsync("AV-Test");
@@ -35,6 +48,10 @@
             Assert.AreEqual("AV-Test", data.Title);
         }
 
+        /// <summary>
+        /// The TestGetContent.
+        /// </summary>
+        /// <returns>The <see cref="Task"/>.</returns>
         [TestMethod]
         public async Task TestGetContent()
         {
@@ -46,7 +63,10 @@
             Assert.AreEqual("efg", content);
         }
 
-
+        /// <summary>
+        /// The TestSaveNull.
+        /// </summary>
+        /// <returns>The <see cref="Task"/>.</returns>
         [TestMethod]
         public async Task TestSaveNull()
         {
@@ -54,18 +74,32 @@
             Assert.IsFalse(store);
         }
 
+        /// <summary>
+        /// The TestSaveNull2.
+        /// </summary>
+        /// <returns>The <see cref="Task"/>.</returns>
         [TestMethod]
         public async Task TestSaveNull2()
         {
             var store = await provider.WriteCacheAsync(null, "abc");
             Assert.IsFalse(store);
         }
+
+        /// <summary>
+        /// The TestGetNullContent.
+        /// </summary>
+        /// <returns>The <see cref="Task"/>.</returns>
         [TestMethod]
         public async Task TestGetNullContent()
         {
             AvData data = await provider.GetDataAsync(null);
             Assert.IsNull(data);
         }
+
+        /// <summary>
+        /// The TestGetNullContent2.
+        /// </summary>
+        /// <returns>The <see cref="Task"/>.</returns>
         [TestMethod]
         public async Task TestGetNullContent2()
         {
@@ -74,4 +108,3 @@
         }
     }
 }
-    

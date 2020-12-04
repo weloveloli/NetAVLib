@@ -1,13 +1,17 @@
-﻿// JavDBExtractorTest.cs 2020
+﻿// -----------------------------------------------------------------------
+// <copyright file="JavDBExtractorTest.cs" company="Weloveloli">
+//     Copyright (c) Weloveloli.  All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
-namespace AVCli.AVLib.Tests.Extractor
+namespace Weloveloli.AVLib.Tests.Extractor
 {
-    using AVCli.AVLib.Extractor;
-    using AVCli.AVLib.Services;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Moq;
     using System.IO;
     using System.Threading.Tasks;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Moq;
+    using Weloveloli.AVLib.Extractor;
+    using Weloveloli.AVLib.Services;
 
     /// <summary>
     /// Defines the <see cref="JavDBExtractorTest" />.

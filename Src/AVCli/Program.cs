@@ -1,16 +1,11 @@
-﻿// Program.cs 2020
+﻿// -----------------------------------------------------------------------
+// <copyright file="Program.cs" company="Weloveloli">
+//     Copyright (c) Weloveloli.  All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
-namespace AVCli
+namespace Weloveloli.AVCli
 {
-    using AVCli.AVLib;
-    using AVCli.AVLib.Extensions;
-    using AVCli.AVLib.Extractor;
-    using AVCli.AVLib.Services;
-    using ConsoleTables;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
     using System.CommandLine;
@@ -25,6 +20,15 @@ namespace AVCli
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using ConsoleTables;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
+    using Weloveloli.AVLib;
+    using Weloveloli.AVLib.Extensions;
+    using Weloveloli.AVLib.Extractor;
+    using Weloveloli.AVLib.Services;
 
     /// <summary>
     /// Defines the <see cref="Program" />.
@@ -86,7 +90,7 @@ namespace AVCli
             root.AddArgument(new Argument<string>("number", "number of av"));
             root.AddOption(new Option<bool>(new string[] { "--table", "-t" }, () => false, "set table view"));
             root.AddOption(new Option<bool>(new string[] { "--search", "-s" }, () => false, "enable search"));
-            root.Handler = CommandHandler.Create<string, List<string>, bool,bool, IHost>(Run);
+            root.Handler = CommandHandler.Create<string, List<string>, bool, bool, IHost>(Run);
             return new CommandLineBuilder(root);
         }
 
@@ -96,7 +100,7 @@ namespace AVCli
         /// <param name="number">The number<see cref="string"/>.</param>
         /// <param name="proxies">The proxies<see cref="List{String}"/>.</param>
         /// <param name="table">The table<see cref="bool"/>.</param>
-        /// <param name="search">the search<see cref="bool"/></param>
+        /// <param name="search">the search<see cref="bool"/>.</param>
         /// <param name="host">The host<see cref="IHost"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         private static async Task Run(string number, List<string> proxies, bool table, bool search, IHost host)
@@ -200,41 +204,70 @@ namespace AVCli
                    NameValue.Of("Actors",e.Actors),
                    NameValue.Of("Director",e.Directors),
                    NameValue.Of("Tags",e.Tags),
- 
+
                };
                 values.AddRange(NameValue.AsList("Covers", e.Covers));
                 values.AddRange(NameValue.AsList("Magnets", e.Magnets));
-         
+
                 ConsoleTable.From(values).Configure(o =>
                 {
                     o.NumberAlignment = Alignment.Right;
-                    o.EnableCount = false;       
+                    o.EnableCount = false;
                 }
                 ).Write();
                 Console.WriteLine();
             });
         }
 
+        /// <summary>
+        /// Defines the <see cref="NameValue" />.
+        /// </summary>
         internal class NameValue
         {
-            public string Name  { get; private set; }
-            public string Value  { get; private set; }
+            /// <summary>
+            /// Gets the Name.
+            /// </summary>
+            public string Name { get; private set; }
 
-            public static NameValue Of(string name,string value)
+            /// <summary>
+            /// Gets the Value.
+            /// </summary>
+            public string Value { get; private set; }
+
+            /// <summary>
+            /// The Of.
+            /// </summary>
+            /// <param name="name">The name<see cref="string"/>.</param>
+            /// <param name="value">The value<see cref="string"/>.</param>
+            /// <returns>The <see cref="NameValue"/>.</returns>
+            public static NameValue Of(string name, string value)
             {
                 return new NameValue { Name = name, Value = value };
             }
 
+            /// <summary>
+            /// The Of.
+            /// </summary>
+            /// <param name="name">The name<see cref="string"/>.</param>
+            /// <param name="value">The value<see cref="List{string}"/>.</param>
+            /// <returns>The <see cref="NameValue"/>.</returns>
             public static NameValue Of(string name, List<string> value)
             {
                 return new NameValue { Name = name, Value = value?.Join(",") };
             }
+
+            /// <summary>
+            /// The AsList.
+            /// </summary>
+            /// <param name="name">The name<see cref="string"/>.</param>
+            /// <param name="value">The value<see cref="List{string}"/>.</param>
+            /// <returns>The <see cref="List{NameValue}"/>.</returns>
             public static List<NameValue> AsList(string name, List<string> value)
             {
                 return value?.Select((e, i) =>
                 {
                     return new NameValue { Name = name + i, Value = e };
-                }).ToList()??new List<NameValue>();
+                }).ToList() ?? new List<NameValue>();
             }
         }
     }

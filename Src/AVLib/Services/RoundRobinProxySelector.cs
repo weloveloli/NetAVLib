@@ -1,12 +1,16 @@
-﻿// RoundRobinProxySelector.cs 2020
+﻿// -----------------------------------------------------------------------
+// <copyright file="RoundRobinProxySelector.cs" company="Weloveloli">
+//     Copyright (c) Weloveloli.  All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
-namespace AVCli.AVLib.Services
+namespace Weloveloli.AVLib.Services
 {
-    using AVCli.AVLib;
-    using AVCli.AVLib.Extensions;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
+    using Weloveloli.AVLib;
+    using Weloveloli.AVLib.Extensions;
 
     /// <summary>
     /// Defines the <see cref="RoundRobinProxySelector" />.

@@ -1,4 +1,10 @@
-﻿namespace AVCli.AVLib.Services
+﻿// -----------------------------------------------------------------------
+// <copyright file="DictCacheProvider.cs" company="Weloveloli">
+//     Copyright (c) Weloveloli.  All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+namespace Weloveloli.AVLib.Services
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -48,11 +54,11 @@
         /// <returns>The <see cref="Task{AvData}"/>.</returns>
         public Task<AvData> GetDataAsync(string number)
         {
-            if(number == null)
+            if (number == null)
             {
                 return Task.FromResult<AvData>(null);
             }
-            return Task.Run(() => this.dictObj.ContainsKey(number)?this.dictObj[number]:null);
+            return Task.Run(() => this.dictObj.ContainsKey(number) ? this.dictObj[number] : null);
         }
 
         /// <summary>

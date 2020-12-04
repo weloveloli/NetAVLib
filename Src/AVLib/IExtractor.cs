@@ -1,6 +1,10 @@
-﻿// IExtractor.cs 2020
+﻿// -----------------------------------------------------------------------
+// <copyright file="IExtractor.cs" company="Weloveloli">
+//     Copyright (c) Weloveloli.  All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
-namespace AVCli.AVLib
+namespace Weloveloli.AVLib
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

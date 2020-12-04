@@ -1,10 +1,16 @@
-﻿namespace AVCli.AVLib.Services
+﻿// -----------------------------------------------------------------------
+// <copyright file="LiteDBCacheProvider.cs" company="Weloveloli">
+//     Copyright (c) Weloveloli.  All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+namespace Weloveloli.AVLib.Services
 {
-    using AVCli.AVLib.Extensions;
-    using LiteDB;
     using System;
     using System.IO;
     using System.Threading.Tasks;
+    using LiteDB;
+    using Weloveloli.AVLib.Extensions;
 
     /// <summary>
     /// Defines the <see cref="LiteDBCacheProvider" />.
@@ -109,12 +115,6 @@
             }
         }
 
-        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        // ~FasterCacheProvider()
-        // {
-        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        //     Dispose(disposing: false);
-        // }
         /// <summary>
         /// The Dispose.
         /// </summary>

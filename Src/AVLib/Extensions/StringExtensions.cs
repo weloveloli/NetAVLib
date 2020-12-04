@@ -1,6 +1,10 @@
-﻿// StringExtensions.cs 2020
+﻿// -----------------------------------------------------------------------
+// <copyright file="StringExtensions.cs" company="Weloveloli">
+//     Copyright (c) Weloveloli.  All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
-namespace AVCli.AVLib.Extensions
+namespace Weloveloli.AVLib.Extensions
 {
     using System;
     using System.Text;

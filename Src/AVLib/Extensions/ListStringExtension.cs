@@ -1,4 +1,10 @@
-﻿namespace AVCli.AVLib.Extensions
+﻿// -----------------------------------------------------------------------
+// <copyright file="ListStringExtension.cs" company="Weloveloli">
+//     Copyright (c) Weloveloli.  All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+namespace Weloveloli.AVLib.Extensions
 {
     using System.Collections.Generic;
     using System.Linq;

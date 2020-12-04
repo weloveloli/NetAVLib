@@ -1,17 +1,21 @@
-// UnitTest1.cs 2020
+// -----------------------------------------------------------------------
+// <copyright file="DefaultHtmlContentReaderTest.cs" company="Weloveloli">
+//     Copyright (c) Weloveloli.  All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
-namespace AVLib.Test
+namespace Weloveloli.AVLib.Test
 {
-    using AVCli.AVLib;
-    using AVCli.AVLib.Services;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Moq;
-    using Moq.Protected;
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Moq;
+    using Moq.Protected;
+    using Weloveloli.AVLib;
+    using Weloveloli.AVLib.Services;
 
     /// <summary>
     /// Defines the <see cref="DefaultHtmlContentReaderTest" />.
@@ -72,6 +76,7 @@ namespace AVLib.Test
         /// <summary>
         /// The TestLoadFromUrlAsync.
         /// </summary>
+        /// <returns>The <see cref="Task"/>.</returns>
         [TestMethod]
         public async Task TestLoadFromUrlAsync()
         {
@@ -79,9 +84,12 @@ namespace AVLib.Test
             var defaultHtmlContentReader = new DefaultHtmlContentReader(this.httpFactory.Object, this.cacheProvider.Object, this.proxySelector.Object, configuration);
             var content = await defaultHtmlContentReader.LoadFromUrlAsync("http://www.baidu.com");
             Assert.AreEqual("success", content);
-
         }
 
+        /// <summary>
+        /// The TestLoadFromUrlAsyncWithCache.
+        /// </summary>
+        /// <returns>The <see cref="Task"/>.</returns>
         [TestMethod]
         public async Task TestLoadFromUrlAsyncWithCache()
         {

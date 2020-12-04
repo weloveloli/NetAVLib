@@ -1,6 +1,10 @@
-﻿// IHtmlContentReader.cs 2020
+﻿// -----------------------------------------------------------------------
+// <copyright file="IHtmlContentReader.cs" company="Weloveloli">
+//     Copyright (c) Weloveloli.  All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
-namespace AVCli.AVLib
+namespace Weloveloli.AVLib
 {
     using System.Threading.Tasks;
 

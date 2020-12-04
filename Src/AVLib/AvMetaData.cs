@@ -1,4 +1,10 @@
-﻿namespace AVCli.AVLib
+﻿// -----------------------------------------------------------------------
+// <copyright file="AvMetaData.cs" company="Weloveloli">
+//     Copyright (c) Weloveloli.  All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+namespace Weloveloli.AVLib
 {
     /// <summary>
     /// Defines the <see cref="AvMetaData" />.

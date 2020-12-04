@@ -1,6 +1,10 @@
-﻿// DefaultHtmlContentReader.cs 2020
+﻿// -----------------------------------------------------------------------
+// <copyright file="DefaultHtmlContentReader.cs" company="Weloveloli">
+//     Copyright (c) Weloveloli.  All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
-namespace AVCli.AVLib.Services
+namespace Weloveloli.AVLib.Services
 {
     using System.Net.Http;
     using System.Threading.Tasks;

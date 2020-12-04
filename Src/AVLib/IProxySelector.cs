@@ -1,6 +1,10 @@
-﻿// IProxySelector.cs 2020
+﻿// -----------------------------------------------------------------------
+// <copyright file="IProxySelector.cs" company="Weloveloli">
+//     Copyright (c) Weloveloli.  All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
-namespace AVCli.AVLib
+namespace Weloveloli.AVLib
 {
     using System.Collections.Generic;
 
@@ -20,6 +24,6 @@ namespace AVCli.AVLib
         /// Get All of the proxy.
         /// </summary>
         /// <returns>The <see cref="List{string}"/>.</returns>
-        public Dictionary<string,string> GetAll();
+        public Dictionary<string, string> GetAll();
     }
 }

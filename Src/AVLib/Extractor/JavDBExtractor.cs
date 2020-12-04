@@ -1,15 +1,17 @@
-﻿// JavDBExtractor.cs 2020
+﻿// -----------------------------------------------------------------------
+// <copyright file="JavDBExtractor.cs" company="Weloveloli">
+//     Copyright (c) Weloveloli.  All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
-namespace AVCli.AVLib.Extractor
+namespace Weloveloli.AVLib.Extractor
 {
-    using AngleSharp;
-    using AngleSharp.Dom;
-    using AngleSharp.Html.Dom.Events;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
+    using AngleSharp;
+    using AngleSharp.Dom;
 
     /// <summary>
     /// Defines the <see cref="JavDBExtractor" />.
@@ -105,13 +107,18 @@ namespace AVCli.AVLib.Extractor
             return await ResolveFromMetaData(metaData);
         }
 
+        /// <summary>
+        /// The ResolveFromMetaData.
+        /// </summary>
+        /// <param name="metaData">The metaData<see cref="AvMetaData"/>.</param>
+        /// <returns>The <see cref="Task{AvData}"/>.</returns>
         public async Task<AvData> ResolveFromMetaData(AvMetaData metaData)
         {
-            if(metaData == null)
+            if (metaData == null)
             {
                 return null;
             }
-            var data  = await cacheProvider.GetDataAsync(metaData.Number);
+            var data = await cacheProvider.GetDataAsync(metaData.Number);
             if (data != null)
             {
                 return data;
@@ -128,13 +135,13 @@ namespace AVCli.AVLib.Extractor
             }
             var document = await context.OpenAsync(req => req.Content(detailContent));
 
-            data =  ResolveContent(document, metaData);
+            data = ResolveContent(document, metaData);
             if (data != null)
             {
                 await cacheProvider.StoreDataAsync(data);
             }
             return data;
-        } 
+        }
 
         /// <summary>
         /// The ResolveContent.
@@ -152,7 +159,7 @@ namespace AVCli.AVLib.Extractor
             var release = document.QuerySelector("body > section > div > div.movie-info-panel > div > div:nth-child(2) > nav > div:nth-child(6) > span")?.Text();
             var category = document.QuerySelector("body > section > div > div.movie-info-panel > div > div:nth-child(2) > nav > div:nth-child(7) > span")?.Text();
             var actor = document.QuerySelector("body > section > div > div.movie-info-panel > div > div:nth-child(2) > nav > div:nth-child(8) > span")?.Text();
-            var coverUrl = document.QuerySelector("body > section > div > div.movie-info-panel > div > div.column.column-video-cover > a > img") ?.GetAttribute("src");
+            var coverUrl = document.QuerySelector("body > section > div > div.movie-info-panel > div > div.column.column-video-cover > a > img")?.GetAttribute("src");
             var previewUrl = document.QuerySelector("#preview-video > source")?.GetAttribute("src");
             var images = document.QuerySelectorAll(".tile-item").Select(e => e.GetAttribute("href")).ToList();
             var magnets = document.QuerySelectorAll(".magnet-name > a").Select(e => e.GetAttribute("href")).ToList();
@@ -163,7 +170,7 @@ namespace AVCli.AVLib.Extractor
                 WebSiteUrl = metaData.WebSiteUrl,
                 ThumbUrl = metaData.ThumbUrl,
                 Time = time?.Trim(),
-                Year = time?.Substring(0,4),
+                Year = time?.Substring(0, 4),
                 Release = release,
                 Studio = studio,
                 MainCover = coverUrl,
@@ -174,8 +181,6 @@ namespace AVCli.AVLib.Extractor
                 Magnets = magnets,
                 Source = this.GetKey(),
                 Outline = outline
-
-
             };
 
             return data;
@@ -184,7 +189,7 @@ namespace AVCli.AVLib.Extractor
         /// <summary>
         /// The getDetailPageUrl.
         /// </summary>
-        /// <param name="number">The number<see cref="string"/>.</param>
+        /// <param name="keyword">The keyword<see cref="string"/>.</param>
         /// <returns>The <see cref="Task{string}"/>.</returns>
         private async Task<List<AvMetaData>> GetMetaDataByKeyWords(string keyword)
         {
@@ -211,7 +216,7 @@ namespace AVCli.AVLib.Extractor
             var number = element.QuerySelector(".uid")?.Text();
             var title = element.QuerySelector(".video-title")?.Text();
             var thumbUrl = element.QuerySelector("img")?.Attributes["data-src"]?.Value;
-            if(string.IsNullOrEmpty(href) || string.IsNullOrEmpty(number))
+            if (string.IsNullOrEmpty(href) || string.IsNullOrEmpty(number))
             {
                 return null;
             }

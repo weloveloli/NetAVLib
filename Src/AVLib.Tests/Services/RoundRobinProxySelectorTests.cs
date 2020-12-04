@@ -1,9 +1,15 @@
-namespace AVCli.AVLib.Services
+// -----------------------------------------------------------------------
+// <copyright file="RoundRobinProxySelectorTests.cs" company="Weloveloli">
+//     Copyright (c) Weloveloli.  All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+namespace Weloveloli.AVLib.Services
 {
-    using AVCli.AVLib;
+    using System.Collections.Generic;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
-    using System.Collections.Generic;
+    using Weloveloli.AVLib;
 
     /// <summary>
     /// Defines the <see cref="RoundRobinProxySelectorTests" />.
@@ -88,7 +94,9 @@ namespace AVCli.AVLib.Services
             this.mockRepository.VerifyAll();
         }
 
-
+        /// <summary>
+        /// The Test_No_Proxy.
+        /// </summary>
         [TestMethod]
         public void Test_No_Proxy()
         {
@@ -97,6 +105,9 @@ namespace AVCli.AVLib.Services
             Assert.AreEqual(Configuration.NoProxy, selector.GetProxyName(null));
         }
 
+        /// <summary>
+        /// The Test_One_Proxy.
+        /// </summary>
         [TestMethod]
         public void Test_One_Proxy()
         {

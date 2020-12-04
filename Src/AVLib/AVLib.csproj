@@ -3,9 +3,11 @@
   <PropertyGroup>
     <TargetFrameworks Condition="'$(LibraryFrameworks)'==''">netcoreapp3.1</TargetFrameworks>
     <TargetFrameworks Condition="'$(LibraryFrameworks)'!=''">$(LibraryFrameworks)</TargetFrameworks>
-    <RootNamespace>AVCli.AVLib</RootNamespace>
-    <AssemblyName>AVCli.AVLib</AssemblyName>
+    <RootNamespace>Weloveloli.AVLib</RootNamespace>
+    <AssemblyName>Weloveloli.AVLib</AssemblyName>
     <LangVersion>8.0</LangVersion>
+    <Version>0.0.1</Version>
+    <Authors>esfak47@qq.com</Authors>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,6 +1,10 @@
-﻿// AvData.cs 2020
+﻿// -----------------------------------------------------------------------
+// <copyright file="AvData.cs" company="Weloveloli">
+//     Copyright (c) Weloveloli.  All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
-namespace AVCli.AVLib
+namespace Weloveloli.AVLib
 {
     using System.Collections.Generic;
 
@@ -73,7 +77,6 @@ namespace AVCli.AVLib
         /// Gets or sets the Magnets.
         /// </summary>
         public List<string> Magnets { get; set; }
-
 
         /// <summary>
         /// Gets or sets the PreviewVideo.

@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AVLib", "AVLib\AVLib.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AVLib.Tests", "AVLib.Tests\AVLib.Tests.csproj", "{23BE5354-FD6E-4C37-92D7-246A8AB971AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AVUI", "AVUI\AVUI.csproj", "{689738C6-7CB5-46B1-847C-C87FBB43039B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,18 +55,6 @@ Global
 		{23BE5354-FD6E-4C37-92D7-246A8AB971AD}.Release|x64.Build.0 = Release|Any CPU
 		{23BE5354-FD6E-4C37-92D7-246A8AB971AD}.Release|x86.ActiveCfg = Release|Any CPU
 		{23BE5354-FD6E-4C37-92D7-246A8AB971AD}.Release|x86.Build.0 = Release|Any CPU
-		{689738C6-7CB5-46B1-847C-C87FBB43039B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{689738C6-7CB5-46B1-847C-C87FBB43039B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{689738C6-7CB5-46B1-847C-C87FBB43039B}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{689738C6-7CB5-46B1-847C-C87FBB43039B}.Debug|x64.Build.0 = Debug|Any CPU
-		{689738C6-7CB5-46B1-847C-C87FBB43039B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{689738C6-7CB5-46B1-847C-C87FBB43039B}.Debug|x86.Build.0 = Debug|Any CPU
-		{689738C6-7CB5-46B1-847C-C87FBB43039B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{689738C6-7CB5-46B1-847C-C87FBB43039B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{689738C6-7CB5-46B1-847C-C87FBB43039B}.Release|x64.ActiveCfg = Release|Any CPU
-		{689738C6-7CB5-46B1-847C-C87FBB43039B}.Release|x64.Build.0 = Release|Any CPU
-		{689738C6-7CB5-46B1-847C-C87FBB43039B}.Release|x86.ActiveCfg = Release|Any CPU
-		{689738C6-7CB5-46B1-847C-C87FBB43039B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

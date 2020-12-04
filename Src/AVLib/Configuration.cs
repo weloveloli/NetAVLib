@@ -1,6 +1,10 @@
-﻿// Configuration.cs 2020
+﻿// -----------------------------------------------------------------------
+// <copyright file="Configuration.cs" company="Weloveloli">
+//     Copyright (c) Weloveloli.  All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
-namespace AVCli.AVLib
+namespace Weloveloli.AVLib
 {
     using System;
     using System.Collections.Generic;
@@ -22,13 +26,12 @@ namespace AVCli.AVLib
         };
 
         /// <summary>
-        /// Defines the UserAgentMap.
+        /// Defines the DefaultBaseUrlMap.
         /// </summary>
         private static readonly Dictionary<string, string> DefaultBaseUrlMap = new Dictionary<string, string>
         {
             { "JAVDB","https://javdb4.com"}
         };
-
 
         /// <summary>
         /// Defines the NoProxy.
@@ -89,7 +92,11 @@ namespace AVCli.AVLib
             set { this.basePath = value; }
         }
 
-
+        /// <summary>
+        /// The GetBaseUrl.
+        /// </summary>
+        /// <param name="key">The key<see cref="string"/>.</param>
+        /// <returns>The <see cref="string"/>.</returns>
         public string GetBaseUrl(string key) => Environment.GetEnvironmentVariable("BASE_URL_" + key) ?? DefaultBaseUrlMap[key];
     }
 }
