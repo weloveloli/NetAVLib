@@ -41,8 +41,8 @@ namespace Weloveloli.AVLib.Tests.Extractor
         public void Init()
         {
             Mock<IHtmlContentReader> mock = new Mock<IHtmlContentReader>();
-            var searchContent = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Test\\JAVDB\\SearchIndex.html"));
-            var detailContent = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Test\\JAVDB\\detail.html"));
+            var searchContent = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Test","JAVDB","SearchIndex.html"));
+            var detailContent = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Test", "JAVDB", "detail.html"));
             mock.Setup(x => x.LoadFromUrlAsync(It.Is<string>(x => x.Equals("https://javdb4.com/search?q=MUM-120&f=all")))).ReturnsAsync(searchContent);
             mock.Setup(x => x.LoadFromUrlAsync(It.Is<string>(x => x.Equals("https://javdb4.com/v/8VvnW?locale=zh")))).ReturnsAsync(detailContent);
 
